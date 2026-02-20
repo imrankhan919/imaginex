@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken"
 import User from "../models/userModel.js"
 
 const registerUser = async (req, res) => {
@@ -33,7 +34,16 @@ const registerUser = async (req, res) => {
         throw new Error("User Not Created!")
     }
 
-    res.status(201).json(user)
+    res.status(201).json({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        isAdmin: user.isAdmin,
+        isActive: user.isActive,
+        credits: user.credits,
+        token: generateToken(user._id)
+    })
 
 
 }
@@ -52,7 +62,16 @@ const loginUser = async (req, res) => {
     let user = await User.findOne({ email: email })
 
     if (user && await bcrypt.compare(password, user.password)) {
-        res.status(200).json(user)
+        res.status(200).json({
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            isAdmin: user.isAdmin,
+            isActive: user.isActive,
+            credits: user.credits,
+            token: generateToken(user._id)
+        })
     } else {
         res.status(400)
         throw new Error("Invalid Credentials!")
@@ -62,11 +81,23 @@ const loginUser = async (req, res) => {
 }
 
 
+// Protected Controller
+const privateController = (req, res) => {
+    res.send("I am Private Controller " + req.user.name)
+}
 
 
 
 
-const authController = { registerUser, loginUser }
+// Generate Token
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' })
+}
+
+
+
+
+const authController = { registerUser, loginUser, privateController }
 
 export default authController
 
