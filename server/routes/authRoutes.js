@@ -12,3 +12,6 @@ router.post("/private", protect, authController.privateController)
 
 
 export default router
+
+
+
