@@ -8,7 +8,7 @@ import errorHandler from "./middleware/errorHandler.js"
 import authRoutes from "./routes/authRoutes.js"
 import followRoutes from "./routes/followRoutes.js"
 import profileRoutes from "./routes/profileRoutes.js"
-
+import adminRoutes from "./routes/adminRoutes.js"
 
 
 
@@ -42,6 +42,9 @@ app.use("/api/user", followRoutes)
 
 // Profile Routes
 app.use("/api/profile", profileRoutes)
+
+// Admin Routes
+app.use("/api/admin", adminRoutes)
 
 // Error Handler
 app.use(errorHandler)
