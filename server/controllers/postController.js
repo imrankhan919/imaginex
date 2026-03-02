@@ -2,17 +2,23 @@ import { GoogleGenAI } from "@google/genai";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import uploadToCloudinary from "../middleware/cloudinaryMiddleware.js";
+import Post from "../models/postModel.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
 const generateAndPost = async (req, res) => {
+
+    let userId = req.user.id
+    let newPost
+
     try {
         // Get Prompt
-        const { prompt } = req.body
+        const { prompt, caption } = req.body
 
         // Check if prompt is coming in body
-        if (!prompt) {
+        if (!prompt || !caption) {
             res.status(409)
             throw new Error("Kindly Provide Prompt To Generate Image!")
         }
@@ -25,6 +31,8 @@ const generateAndPost = async (req, res) => {
             model: "gemini-2.5-flash-image",
             contents: prompt,
         });
+
+        console.log(response.candidates)
 
         // Loop Thorugh Correct Response
         for (const part of response.candidates[0].content.parts) {
@@ -39,20 +47,28 @@ const generateAndPost = async (req, res) => {
                 const filePath = path.join(__dirname, "../generated-content", filename);
                 // Write file into server
                 fs.writeFileSync(filePath, buffer);
+                // Upload to cloudinary 
+                const imageLink = await uploadToCloudinary(filePath)
+                // Remove Image From Server
+                fs.unlinkSync(filePath)
 
                 // Create Post
+                newPost = await Post.save({
+                    user: userId,
+                    imageLink: imageLink,
+                    caption: caption
+                })
 
-
-                console.log(filePath)
             }
         }
 
+        res.status(201).json(newPost)
 
-        res.send("Image Generated!")
+
     } catch (error) {
-        console.log(error)
+        console.log(error.message)
         res.status(409)
-        throw new Error("Image Generation Failed!")
+        throw new Error("Post Not Created!")
     }
 
 }
