@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import uploadToCloudinary from "../middleware/cloudinaryMiddleware.js";
 import Post from "../models/postModel.js";
+import User from "../models/userModel.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -28,11 +29,10 @@ const generateAndPost = async (req, res) => {
 
         // Api Call To Generate Image
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash-image",
+            model: "gemini-3.1-flash-image-preview",
             contents: prompt,
         });
 
-        console.log(response.candidates)
 
         // Loop Thorugh Correct Response
         for (const part of response.candidates[0].content.parts) {
@@ -53,11 +53,17 @@ const generateAndPost = async (req, res) => {
                 fs.unlinkSync(filePath)
 
                 // Create Post
-                newPost = await Post.save({
+                newPost = new Post({
                     user: userId,
-                    imageLink: imageLink,
+                    imageLink: imageLink.secure_url,
                     caption: caption
                 })
+
+                // Save Post To DB
+                await newPost.save()
+                // Aggregate User Details In newPost Object
+                await newPost.populate('user')
+
 
             }
         }
@@ -74,7 +80,77 @@ const generateAndPost = async (req, res) => {
 }
 
 
-const postController = { generateAndPost }
+const getPosts = async (req, res) => {
+    const posts = await Post.find().populate('user')
+
+    if (!posts) {
+        res.status(404)
+        throw new Error("Posts Not Found!")
+    }
+
+    res.status(200).json(posts)
+
+}
+
+const getPost = async (req, res) => {
+    const post = await Post.findById(req.params.pid).populate('user')
+
+    if (!post) {
+        res.status(404)
+        throw new Error("Post Not Found!")
+    }
+
+    res.status(200).json(post)
+
+}
+
+
+const likeAndUnlikePost = async (req, res) => {
+
+    let currentUser = await User.findById(req.user._id)
+
+    // Check if user exists
+    if (!currentUser) {
+        res.status(404)
+        throw new Error('User Not Found!')
+    }
+
+    // Check if posts exist
+    const post = await Post.findById(req.params.pid).populate('user')
+
+    if (!post) {
+        res.status(404)
+        throw new Error("Post Not Found!")
+    }
+
+    // Check if already liked
+    if (post.likes.includes(currentUser._id)) {
+        // Dislike
+        // Remove Follower from likes
+        let updatedLikesList = post.likes.filter(like => like.toString() !== currentUser._id.toString())
+        post.likes = updatedLikesList
+        await post.save()
+    } else {
+        // Like
+        // Add Follower in Liked
+        post.likes.push(currentUser._id)
+        await post.save()
+    }
+
+    // Populate after save using the Post model directly
+    await Post.populate(post, { path: 'likes' })
+
+    res.status(200).json(post)
+
+
+}
+
+
+
+
+
+
+const postController = { generateAndPost, getPosts, getPost, likeAndUnlikePost }
 
 
 
