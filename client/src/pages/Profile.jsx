@@ -1,25 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import CoverImage from "../assets/cover_image.jpg"
 import { useParams } from 'react-router-dom';
 import { CURRENT_USER, MOCK_POSTS } from '../mockData';
 import MasonryGrid from '../components/MasonryGrid';
 import PostCard from '../components/PostCard';
 import UserAvatar from '../components/UserAvatar';
-import { Settings, Share2, MapPin, Calendar } from 'lucide-react';
+import { Settings, Share2, MapPin, Calendar, CircleDollarSign } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import Loader from '../components/Loader';
 
 const Profile = () => {
+
+  const { user, isSucess, isError, isLoading, message } = useSelector(state => state.auth)
+
   const { username } = useParams();
-  
+
   // In a real app, fetch user by username. Using CURRENT_USER for mock.
   const isCurrentUser = username === CURRENT_USER.username;
   const userPosts = MOCK_POSTS.slice(0, 8); // Mocking user's posts
+
+
+  // useEffect(() => {
+
+
+
+  // },[])
+
+
+  if (isLoading) {
+    return (
+      <Loader />
+    )
+  }
+
 
   return (
     <div className="w-full relative pb-20">
       {/* Cover Image */}
       <div className="h-64 sm:h-80 w-full relative">
-        <img 
-          src="https://picsum.photos/seed/cover_art/1200/400" 
-          alt="Cover" 
+        <img
+          src={CoverImage}
+          alt="Cover"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-transparent to-transparent"></div>
@@ -30,11 +51,11 @@ const Profile = () => {
           <div className="flex items-end gap-6 relative z-10">
             <UserAvatar src={CURRENT_USER.avatar} alt="Profile" size="xl" ring />
             <div className="mb-2">
-              <h1 className="text-3xl font-syne font-bold text-white">{CURRENT_USER.name}</h1>
-              <p className="text-gray-400">@{CURRENT_USER.username}</p>
+              <h1 className="text-3xl font-syne font-bold text-white">{user.name}</h1>
+              <p className="text-gray-400">@{username}</p>
             </div>
           </div>
-          
+
           <div className="flex gap-3 relative z-10 sm:mb-2">
             <button className="p-2 rounded-full glass-card hover:bg-white/10 transition-colors">
               <Share2 className="w-5 h-5 text-gray-300" />
@@ -53,11 +74,11 @@ const Profile = () => {
 
         {/* Bio & Stats */}
         <div className="max-w-2xl text-gray-300 mb-8 space-y-4">
-          <p className="leading-relaxed">{CURRENT_USER.bio}</p>
-          
+          <p className="leading-relaxed">{user.bio}</p>
+
           <div className="flex gap-6 text-sm text-gray-400">
-            <div className="flex items-center gap-1.5"><MapPin className="w-4 h-4"/> Neo-Tokyo, Cyberspace</div>
-            <div className="flex items-center gap-1.5"><Calendar className="w-4 h-4"/> Joined March 2026</div>
+            <div className="flex items-center gap-1.5"><CircleDollarSign className="w-4 h-4" /> Credits : {user.credits}</div>
+            <div className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Joined {new Date(user.createdAt).toLocaleDateString('en-IN')}</div>
           </div>
 
           <div className="flex gap-8 pt-4 border-t border-white/10">

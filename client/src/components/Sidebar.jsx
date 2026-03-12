@@ -1,15 +1,28 @@
 import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { Home, Compass, PlusSquare, User, Sparkles, Settings, LogOut } from 'lucide-react';
-import { CURRENT_USER } from '../mockData';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUser } from '../features/auth/authSlice';
 
 const Sidebar = () => {
+
+  const { user } = useSelector(state => state.auth)
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const navItems = [
     { icon: Home, label: 'Feed', path: '/feed' },
     { icon: Compass, label: 'Explore', path: '/explore' },
     { icon: PlusSquare, label: 'Generate', path: '/generate' },
-    { icon: User, label: 'Profile', path: `/profile/${CURRENT_USER.username}` },
+    { icon: User, label: 'Profile', path: `/profile/${user?.name}` },
   ];
+
+
+  const handleLogout = () => {
+    dispatch(logoutUser())
+    navigate("/login")
+  }
 
   return (
     <>
@@ -30,10 +43,9 @@ const Sidebar = () => {
               key={item.label}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 ${
-                  isActive
-                    ? 'bg-white/10 text-white font-medium shadow-sm'
-                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                `flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 ${isActive
+                  ? 'bg-white/10 text-white font-medium shadow-sm'
+                  : 'text-gray-400 hover:bg-white/5 hover:text-white'
                 }`
               }
             >
@@ -48,10 +60,10 @@ const Sidebar = () => {
             <Settings className="w-5 h-5" />
             <span>Settings</span>
           </div>
-          <Link to="/login" className="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-red-400 cursor-pointer transition-all mt-1">
+          <button onClick={handleLogout} className="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:bg-white/5 hover:text-red-400 cursor-pointer transition-all mt-1">
             <LogOut className="w-5 h-5" />
             <span>Log out</span>
-          </Link>
+          </button>
         </div>
       </aside>
 
@@ -62,8 +74,7 @@ const Sidebar = () => {
             key={item.label}
             to={item.path}
             className={({ isActive }) =>
-              `flex flex-col items-center justify-center w-full h-full transition-colors ${
-                isActive ? 'text-violet-400' : 'text-gray-500 hover:text-gray-300'
+              `flex flex-col items-center justify-center w-full h-full transition-colors ${isActive ? 'text-violet-400' : 'text-gray-500 hover:text-gray-300'
               }`
             }
           >

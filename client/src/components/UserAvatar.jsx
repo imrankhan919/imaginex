@@ -10,13 +10,9 @@ const UserAvatar = ({ src, alt, size = 'md', isOnline = false, ring = false }) =
 
   return (
     <div className="relative inline-block">
-      <img
-        src={src}
-        alt={alt}
-        className={`${sizeClasses[size]} rounded-full object-cover shadow-md ${
-          ring ? 'ring-2 ring-violet-500 ring-offset-2 ring-offset-[#0a0a0f]' : ''
-        }`}
-      />
+      <div className=' border border-purple-500 bg-gray-900 h-12 w-12 rounded-full flex items-center justify-center'>
+        <h1 className='text-white text-2xl font-bold'>E</h1>
+      </div>
       {isOnline && (
         <span className="absolute bottom-0 right-0 block w-2.5 h-2.5 rounded-full ring-2 ring-[#0a0a0f] bg-green-500"></span>
       )}

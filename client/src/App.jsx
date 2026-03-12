@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -19,7 +19,7 @@ function App() {
 
   const { user } = useSelector(state => state.auth)
 
-  const [isLoggedIn, setIsLoggedIn] = useState(user); // Mock auth
+  const [isLoggedIn, setIsLoggedIn] = useState(user ? true : false); // Mock auth
   const location = useLocation();
 
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/';
@@ -42,6 +42,9 @@ function App() {
     if (!isLoggedIn) return <Navigate to="/login" />;
     return <AppLayout>{children}</AppLayout>;
   };
+
+
+
 
   return (
     <>

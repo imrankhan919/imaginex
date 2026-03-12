@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
+import { loginUser } from '../features/auth/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import Loader from '../components/Loader';
 
 const Login = () => {
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(state => state.auth)
 
 
   const [formData, setFormData] = useState({
@@ -22,15 +31,34 @@ const Login = () => {
 
 
 
-  const navigate = useNavigate();
-
-
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Simulate login
+
+    // Register User
+    dispatch(loginUser(formData))
+
+    // Simulate registration
     navigate('/feed');
   };
+
+
+  useEffect(() => {
+    if (user) {
+      navigate("/")
+    }
+
+    if (isError && message) {
+      toast.error(message, { position: "top-center" })
+    }
+
+  }, [user, isError, message])
+
+  if (isLoading) {
+    return (
+      <Loader />
+    )
+  }
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-[#0a0a0f] p-4 relative overflow-hidden">

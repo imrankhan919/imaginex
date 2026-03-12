@@ -4,6 +4,7 @@ import { Sparkles } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../features/auth/authSlice';
 import { toast } from 'react-toastify';
+import Loader from '../components/Loader';
 
 const Register = () => {
 
@@ -58,7 +59,7 @@ const Register = () => {
 
   if (isLoading) {
     return (
-      <h1>Loading....</h1>
+      <Loader />
     )
   }
 
