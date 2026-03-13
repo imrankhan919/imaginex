@@ -8,6 +8,7 @@ const authSlice = createSlice({
     name: 'auth',
     initialState: {
         user: userExist || null,
+        profile: {},
         isLoading: false,
         isSuccess: false,
         isError: false,
@@ -56,6 +57,22 @@ const authSlice = createSlice({
                 state.isError = false
                 state.message = ""
                 state.user = null
+            }).addCase(getProfile.pending, (state, action) => {
+                state.isLoading = true
+                state.isSuccess = false
+                state.isError = false
+            })
+            .addCase(getProfile.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.profile = action.payload
+                state.isError = false
+            })
+            .addCase(getProfile.rejected, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = false
+                state.isError = true
+                state.message = action.payload
             })
     }
 })
@@ -80,7 +97,6 @@ export const loginUser = createAsyncThunk("AUTH/LOGIN", async (formData, thunkAP
     try {
         return await authService.login(formData)
     } catch (error) {
-        console.log(error.response.data.message)
         let message = error.response.data.message
         return thunkAPI.rejectWithValue(message)
     }
@@ -90,4 +106,15 @@ export const loginUser = createAsyncThunk("AUTH/LOGIN", async (formData, thunkAP
 // Logout User
 export const logoutUser = createAsyncThunk("AUTH/LOGOUT", async () => {
     localStorage.removeItem('user')
+})
+
+
+// Get Profile 
+export const getProfile = createAsyncThunk("GET/PROFILE", async (name, thunkAPI) => {
+    try {
+        return await authService.fetchProfile(name)
+    } catch (error) {
+        let message = error.response.data.message
+        return thunkAPI.rejectWithValue(message)
+    }
 })

@@ -6,8 +6,9 @@ import MasonryGrid from '../components/MasonryGrid';
 import PostCard from '../components/PostCard';
 import UserAvatar from '../components/UserAvatar';
 import { Settings, Share2, MapPin, Calendar, CircleDollarSign } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
+import { getProfile } from '../features/auth/authSlice';
 
 const Profile = () => {
 
@@ -15,16 +16,22 @@ const Profile = () => {
 
   const { username } = useParams();
 
+  const dispatch = useDispatch()
+
+
   // In a real app, fetch user by username. Using CURRENT_USER for mock.
-  const isCurrentUser = username === CURRENT_USER.username;
+
   const userPosts = MOCK_POSTS.slice(0, 8); // Mocking user's posts
 
+  // const getMyProfile = () => {
+  //   dispatch(getProfile("Eskills"))
+  // }
 
-  // useEffect(() => {
 
-
-
-  // },[])
+  useEffect(() => {
+    // Giving Infinite Re-Renders : Fix This
+    // getMyProfile()
+  }, [])
 
 
   if (isLoading) {
@@ -51,7 +58,7 @@ const Profile = () => {
           <div className="flex items-end gap-6 relative z-10">
             <UserAvatar src={CURRENT_USER.avatar} alt="Profile" size="xl" ring />
             <div className="mb-2">
-              <h1 className="text-3xl font-syne font-bold text-white">{user.name}</h1>
+              <h1 className="text-3xl font-syne font-bold text-white">{user?.name}</h1>
               <p className="text-gray-400">@{username}</p>
             </div>
           </div>
@@ -60,25 +67,19 @@ const Profile = () => {
             <button className="p-2 rounded-full glass-card hover:bg-white/10 transition-colors">
               <Share2 className="w-5 h-5 text-gray-300" />
             </button>
-            {isCurrentUser ? (
-              <button className="flex items-center gap-2 px-6 py-2 rounded-full glass-card hover:bg-white/10 transition-colors font-medium">
-                <Settings className="w-4 h-4 text-gray-300" /> Edit Profile
-              </button>
-            ) : (
-              <button className="px-8 py-2 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-medium shadow-lg shadow-violet-600/20">
-                Follow
-              </button>
-            )}
+            <button className="px-8 py-2 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-medium shadow-lg shadow-violet-600/20">
+              Follow
+            </button>
           </div>
         </div>
 
         {/* Bio & Stats */}
         <div className="max-w-2xl text-gray-300 mb-8 space-y-4">
-          <p className="leading-relaxed">{user.bio}</p>
+          <p className="leading-relaxed">{user?.bio}</p>
 
           <div className="flex gap-6 text-sm text-gray-400">
-            <div className="flex items-center gap-1.5"><CircleDollarSign className="w-4 h-4" /> Credits : {user.credits}</div>
-            <div className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Joined {new Date(user.createdAt).toLocaleDateString('en-IN')}</div>
+            <div className="flex items-center gap-1.5"><CircleDollarSign className="w-4 h-4" /> Credits : {user?.credits}</div>
+            <div className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Joined {new Date(user?.createdAt).toLocaleDateString('en-IN')}</div>
           </div>
 
           <div className="flex gap-8 pt-4 border-t border-white/10">
