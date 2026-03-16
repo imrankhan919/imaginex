@@ -16,14 +16,8 @@ const login = async (formData) => {
     return response.data
 }
 
-const fetchProfile = async (name) => {
-    const response = await axios.get('/api/profile/' + name)
-    console.log(response.data)
-    return response.data
-}
 
 
-
-const authService = { register, login, fetchProfile }
+const authService = { register, login }
 
 export default authService

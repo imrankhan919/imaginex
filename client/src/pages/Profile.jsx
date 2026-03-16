@@ -8,33 +8,32 @@ import UserAvatar from '../components/UserAvatar';
 import { Settings, Share2, MapPin, Calendar, CircleDollarSign } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
-import { getProfile } from '../features/auth/authSlice';
+import { getProfile } from '../features/profile/profileSlice';
 
 const Profile = () => {
 
   const { user, isSucess, isError, isLoading, message } = useSelector(state => state.auth)
+  const { profile, profileSuccess, profileLoading, profileError, profileErrorMessage } = useSelector(state => state.profile)
 
-  const { username } = useParams();
 
   const dispatch = useDispatch()
+  const { username } = useParams();
+
+
 
 
   // In a real app, fetch user by username. Using CURRENT_USER for mock.
 
   const userPosts = MOCK_POSTS.slice(0, 8); // Mocking user's posts
 
-  // const getMyProfile = () => {
-  //   dispatch(getProfile("Eskills"))
-  // }
-
 
   useEffect(() => {
-    // Giving Infinite Re-Renders : Fix This
-    // getMyProfile()
-  }, [])
+    // Get Profile
+    dispatch(getProfile(username))
+  }, [username])
 
 
-  if (isLoading) {
+  if (isLoading || profileLoading || !profile) {
     return (
       <Loader />
     )
@@ -56,9 +55,9 @@ const Profile = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative -mt-24 sm:-mt-32">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
           <div className="flex items-end gap-6 relative z-10">
-            <UserAvatar src={CURRENT_USER.avatar} alt="Profile" size="xl" ring />
+            <UserAvatar alt="Profile" size="xl" ring />
             <div className="mb-2">
-              <h1 className="text-3xl font-syne font-bold text-white">{user?.name}</h1>
+              <h1 className="text-3xl font-syne font-bold text-white">{profile?.name}</h1>
               <p className="text-gray-400">@{username}</p>
             </div>
           </div>
@@ -75,24 +74,24 @@ const Profile = () => {
 
         {/* Bio & Stats */}
         <div className="max-w-2xl text-gray-300 mb-8 space-y-4">
-          <p className="leading-relaxed">{user?.bio}</p>
+          <p className="leading-relaxed">{profile?.bio}</p>
 
           <div className="flex gap-6 text-sm text-gray-400">
-            <div className="flex items-center gap-1.5"><CircleDollarSign className="w-4 h-4" /> Credits : {user?.credits}</div>
-            <div className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Joined {new Date(user?.createdAt).toLocaleDateString('en-IN')}</div>
+            <div className="flex items-center gap-1.5"><CircleDollarSign className="w-4 h-4" /> Credits : {profile?.credits}</div>
+            <div className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Joined {new Date(profile?.createdAt).toLocaleDateString('en-IN')}</div>
           </div>
 
           <div className="flex gap-8 pt-4 border-t border-white/10">
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-white">{CURRENT_USER.postsCount}</span>
+              <span className="text-xl font-bold text-white">{profile?.posts.length}</span>
               <span className="text-sm font-medium text-gray-500 uppercase tracking-wider">Posts</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-white">{CURRENT_USER.followers}</span>
+              <span className="text-xl font-bold text-white">{profile?.followers.length}</span>
               <span className="text-sm font-medium text-gray-500 uppercase tracking-wider">Followers</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-white">{CURRENT_USER.following}</span>
+              <span className="text-xl font-bold text-white">{profile?.following.length}</span>
               <span className="text-sm font-medium text-gray-500 uppercase tracking-wider">Following</span>
             </div>
           </div>
