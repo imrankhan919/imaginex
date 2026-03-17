@@ -111,11 +111,11 @@ const Profile = () => {
         </div>
 
         {/* Posts Grid */}
-        <MasonryGrid>
+        {/* <MasonryGrid>
           {userPosts.map(post => (
             <PostCard key={post.id} post={post} />
           ))}
-        </MasonryGrid>
+        </MasonryGrid> */}
       </div>
     </div>
   );

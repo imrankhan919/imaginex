@@ -1,10 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MasonryGrid from '../components/MasonryGrid';
 import PostCard from '../components/PostCard';
 import { MOCK_POSTS } from '../mockData';
 import { Sparkles } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPosts } from '../features/post/postSlice';
+import Loader from '../components/Loader';
 
 const Feed = () => {
+
+  const { posts, postLoading, postSucess, postError, postErrorMessage } = useSelector(state => state.post)
+
+  console.log(posts)
+
+  const dispatch = useDispatch()
+
+
+  useEffect(() => {
+    dispatch(getPosts())
+  }, [])
+
+
+  if (postLoading) {
+    return (
+      <Loader />
+    )
+  }
+
+
   return (
     <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto mt-4">
       <div className="mb-8 flex items-center justify-between">
@@ -18,10 +41,10 @@ const Feed = () => {
           </button>
         </div>
       </div>
-      
+
       <MasonryGrid>
-        {MOCK_POSTS.map(post => (
-          <PostCard key={post.id} post={post} />
+        {posts.map(post => (
+          <PostCard key={post._id} post={post} />
         ))}
       </MasonryGrid>
     </div>

@@ -19,7 +19,7 @@ function App() {
 
   const { user } = useSelector(state => state.auth)
 
-  const [isLoggedIn, setIsLoggedIn] = useState(user ? true : false); // Mock auth
+  const [isLoggedIn, setIsLoggedIn] = useState(user ? true : false);
   const location = useLocation();
 
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/';

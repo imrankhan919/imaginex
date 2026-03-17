@@ -17,10 +17,10 @@ const generateAndPost = async (req, res) => {
 
     try {
         // Get Prompt
-        const { prompt, caption } = req.body
+        const { prompt } = req.body
 
         // Check if prompt is coming in body
-        if (!prompt || !caption) {
+        if (!prompt) {
             res.status(409)
             throw new Error("Kindly Provide Prompt To Generate Image!")
         }
@@ -57,7 +57,7 @@ const generateAndPost = async (req, res) => {
                 newPost = new Post({
                     user: userId,
                     imageLink: imageLink.secure_url,
-                    caption: caption
+                    prompt: prompt
                 })
 
                 // Save Post To DB
