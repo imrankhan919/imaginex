@@ -1,11 +1,25 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import { Sparkles, Wand2, Users, Image as ImageIcon } from 'lucide-react';
+import { useEffect } from 'react';
 
 const Landing = () => {
+
+  const { user } = useSelector(state => state.auth)
+
+  const navigate = useNavigate()
+
+
+  useEffect(() => {
+    if (user) {
+      navigate("/feed")
+    }
+  }, [user])
+
+
   return (
     <div className="w-full min-h-screen bg-[#0a0a0f] overflow-hidden flex flex-col relative">
-      
+
       {/* Animated Background Mesh */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-violet-600/20 rounded-full blur-[120px] mix-blend-screen animate-blob"></div>
@@ -35,16 +49,16 @@ const Landing = () => {
           <Sparkles className="w-4 h-4 shrink-0" />
           <span className="text-xs md:text-sm font-medium truncate">The Next-Gen AI Art Community</span>
         </div>
-        
+
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-syne font-extrabold text-white mb-6 leading-[1.1]">
           Visualize <br className="md:hidden" />
           <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent">Anything.</span>
         </h1>
-        
+
         <p className="text-lg md:text-xl text-gray-400 max-w-2xl mb-10 leading-relaxed font-medium">
           Join a community of millions of creators. Generate breathtaking AI art, discover new prompts, and share your imagination with the world.
         </p>
-        
+
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
           <Link to="/register" className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-bold text-lg hover:scale-105 active:scale-95 transition-transform shadow-lg shadow-violet-600/25 flex items-center justify-center gap-2">
             Start Creating <Wand2 className="w-5 h-5" />
@@ -66,7 +80,7 @@ const Landing = () => {
               <h3 className="text-xl font-syne font-bold text-white mb-3">Generate Instantly</h3>
               <p className="text-gray-400 leading-relaxed">Simply type your prompt and watch as our state-of-the-art models bring your imagination to life in seconds.</p>
             </div>
-            
+
             <div className="glass-card p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300">
               <div className="w-14 h-14 rounded-2xl bg-fuchsia-600/20 flex items-center justify-center mb-6 border border-fuchsia-500/20">
                 <Users className="w-7 h-7 text-fuchsia-400" />
@@ -74,7 +88,7 @@ const Landing = () => {
               <h3 className="text-xl font-syne font-bold text-white mb-3">Vibrant Community</h3>
               <p className="text-gray-400 leading-relaxed">Follow your favorite creators, discover new artistic styles, and build an audience around your unique vision.</p>
             </div>
-            
+
             <div className="glass-card p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300">
               <div className="w-14 h-14 rounded-2xl bg-indigo-600/20 flex items-center justify-center mb-6 border border-indigo-500/20">
                 <ImageIcon className="w-7 h-7 text-indigo-400" />
@@ -85,7 +99,7 @@ const Landing = () => {
           </div>
         </div>
       </div>
-      
+
     </div>
   );
 };

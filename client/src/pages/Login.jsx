@@ -37,15 +37,12 @@ const Login = () => {
 
     // Register User
     dispatch(loginUser(formData))
-
-    // Simulate registration
-    navigate('/feed');
   };
 
 
   useEffect(() => {
     if (user) {
-      navigate("/")
+      navigate("/feed")
     }
 
     if (isError && message) {

@@ -9,10 +9,11 @@ import { Settings, Share2, MapPin, Calendar, CircleDollarSign } from 'lucide-rea
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import { getProfile } from '../features/profile/profileSlice';
+import { toast } from 'react-toastify';
 
 const Profile = () => {
 
-  const { user, isSucess, isError, isLoading, message } = useSelector(state => state.auth)
+
   const { profile, profileSuccess, profileLoading, profileError, profileErrorMessage } = useSelector(state => state.profile)
 
 
@@ -20,20 +21,19 @@ const Profile = () => {
   const { username } = useParams();
 
 
-
-
-  // In a real app, fetch user by username. Using CURRENT_USER for mock.
-
-  const userPosts = MOCK_POSTS.slice(0, 8); // Mocking user's posts
-
-
   useEffect(() => {
     // Get Profile
     dispatch(getProfile(username))
+
+    if (profileError && profileErrorMessage) {
+      toast.error(profileErrorMessage, { position: "top-center", theme: "dark" })
+    }
+
+
   }, [username])
 
 
-  if (isLoading || profileLoading || !profile) {
+  if (profileLoading) {
     return (
       <Loader />
     )
@@ -111,11 +111,11 @@ const Profile = () => {
         </div>
 
         {/* Posts Grid */}
-        {/* <MasonryGrid>
-          {userPosts.map(post => (
+        <MasonryGrid>
+          {profile?.posts.map(post => (
             <PostCard key={post.id} post={post} />
           ))}
-        </MasonryGrid> */}
+        </MasonryGrid>
       </div>
     </div>
   );

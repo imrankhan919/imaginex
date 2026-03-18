@@ -51,6 +51,23 @@ const postSlice = createSlice({
                 state.postError = true
                 state.postErrorMessage = action.payload
             })
+            .addCase(getPost.pending, (state, action) => {
+                state.postLoading = true
+                state.postSuccess = false
+                state.postError = false
+            })
+            .addCase(getPost.fulfilled, (state, action) => {
+                state.postLoading = false
+                state.postSuccess = true
+                state.post = action.payload
+                state.postError = false
+            })
+            .addCase(getPost.rejected, (state, action) => {
+                state.postLoading = false
+                state.postSuccess = false
+                state.postError = true
+                state.postErrorMessage = action.payload
+            })
     }
 });
 
@@ -73,12 +90,26 @@ export const generatePost = createAsyncThunk("POST/GENERATE", async (prompt, thu
 
 
 // Get Posts
-export const getPosts = createAsyncThunk("POST/GET", async (_, thunkAPI) => {
+export const getPosts = createAsyncThunk("POSTS/GET", async (_, thunkAPI) => {
 
     let token = thunkAPI.getState().auth.user.token
 
     try {
         return await postService.fetchPosts(token)
+    } catch (error) {
+        let message = error.response.data.message
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+
+// Get Post
+export const getPost = createAsyncThunk("POST/GET", async (pid, thunkAPI) => {
+
+    let token = thunkAPI.getState().auth.user.token
+
+    try {
+        return await postService.fetchPost(pid, token)
     } catch (error) {
         let message = error.response.data.message
         return thunkAPI.rejectWithValue(message)

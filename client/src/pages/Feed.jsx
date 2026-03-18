@@ -6,22 +6,36 @@ import { Sparkles } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPosts } from '../features/post/postSlice';
 import Loader from '../components/Loader';
+import { getProfile } from '../features/profile/profileSlice';
+import { toast } from 'react-toastify';
 
 const Feed = () => {
 
   const { posts, postLoading, postSucess, postError, postErrorMessage } = useSelector(state => state.post)
-
-  console.log(posts)
+  const { user, isLoading, isError, isSuccess, message } = useSelector(state => state.auth)
+  const { profile } = useSelector(state => state.profile)
 
   const dispatch = useDispatch()
 
+  // const myFeed = posts.map((post) => {})
+
+  // console.log(myFeed)
 
   useEffect(() => {
+    // Fetch Posts
     dispatch(getPosts())
-  }, [])
+    // Fetch Profile
+    dispatch(getProfile(user.name))
+
+    if (postError && postErrorMessage || isError && message) {
+      toast.error(postErrorMessage || message, { position: "top-center" })
+    }
 
 
-  if (postLoading) {
+  }, [postError, postErrorMessage, isError, message])
+
+
+  if (postLoading || isLoading) {
     return (
       <Loader />
     )
@@ -35,9 +49,6 @@ const Feed = () => {
         <div className="flex gap-2">
           <button className="px-4 py-2 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-colors text-sm">
             Following
-          </button>
-          <button className="px-4 py-2 rounded-full glass-card text-gray-400 font-medium hover:text-white transition-colors text-sm flex items-center gap-1.5 cursor-pointer">
-            <Sparkles className="w-4 h-4" /> For You
           </button>
         </div>
       </div>

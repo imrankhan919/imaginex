@@ -42,6 +42,7 @@ export const getProfile = createAsyncThunk("FETCH/PROFILE", async (username, thu
     try {
         return await profileService.fetchProfile(username)
     } catch (error) {
-        console.log(error)
+        let message = error.response.data.message
+        return thunkAPI.rejectWithValue(message)
     }
 })

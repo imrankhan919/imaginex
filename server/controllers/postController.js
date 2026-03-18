@@ -15,6 +15,23 @@ const generateAndPost = async (req, res) => {
     let userId = req.user.id
     let newPost
 
+    // Check if user exists
+    const user = await User.findById(userId)
+
+    if (!user) {
+        res.status(404)
+        throw new Error("User Not Found!")
+    }
+
+
+    // Check if user have enough credits
+    if (user.credits < 1) {
+        res.status(409)
+        throw new Error("Not Enough Credits!")
+    }
+
+
+
     try {
         // Get Prompt
         const { prompt } = req.body
@@ -68,6 +85,9 @@ const generateAndPost = async (req, res) => {
 
             }
         }
+
+        // Update Credits
+        await User.findByIdAndUpdate(user._id, { credits: user.credits - 1 }, { new: true })
 
         res.status(201).json(newPost)
 
@@ -176,6 +196,9 @@ const reportPost = async (req, res) => {
     res.status(201).json(newReport)
 
 }
+
+
+
 
 
 

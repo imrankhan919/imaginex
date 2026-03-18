@@ -24,16 +24,6 @@ const Navbar = () => {
         <div className="md:hidden flex items-center gap-2">
           <Sparkles className="text-violet-500 w-6 h-6" />
         </div>
-
-        {/* Search Bar */}
-        <div className="hidden md:flex relative max-w-md w-full ml-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search ideas, prompts, or creators..."
-            className="w-full bg-white/5 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:bg-white/10 transition-all text-white placeholder-gray-400"
-          />
-        </div>
       </div>
 
       {/* Right Side Actions */}
@@ -49,8 +39,8 @@ const Navbar = () => {
           <Bell className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-fuchsia-500 rounded-full"></span>
         </button>
-        <Link to={`/profile/${CURRENT_USER.username}`}>
-          <UserAvatar alt={CURRENT_USER.name} size="sm" isOnline ring />
+        <Link to={`/profile/${user?.name}`}>
+          <UserAvatar alt={user?.name} size="sm" isOnline ring />
         </Link>
       </div>
 

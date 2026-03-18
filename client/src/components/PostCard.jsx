@@ -4,9 +4,6 @@ import UserAvatar from './UserAvatar';
 import LikeButton from './LikeButton';
 
 const PostCard = ({ post }) => {
-
-  console.log(post)
-
   return (
     <Link
       to={`/post/${post._id}`}
