@@ -6,12 +6,26 @@ import { Share2, Bookmark, MoreHorizontal, ArrowLeft, Wand2 } from 'lucide-react
 import { useDispatch, useSelector } from 'react-redux';
 import { getPost } from '../features/post/postSlice';
 import Loader from '../components/Loader';
+import { follow } from '../features/profile/profileSlice';
 
 const PostDetail = () => {
   const { post, postLoading, postSucess, postError, postErrorMessage } = useSelector(state => state.post)
 
+  const { profile, profileLoading, profileSuccess, profileError, profileErrorMessage } = useSelector(state => state.profile)
+
   const { id } = useParams();
   const dispatch = useDispatch()
+
+
+  let alreadyFollowed = profile
+
+  console.log(alreadyFollowed)
+
+
+  const followUser = (id) => {
+    dispatch(follow(id))
+  }
+
 
 
   useEffect(() => {
@@ -79,7 +93,7 @@ const PostDetail = () => {
                 <p className="text-xs text-gray-400">{post.user.followers.length} followers</p>
               </div>
             </Link>
-            <button className="px-5 py-2 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-colors text-sm">
+            <button onClick={() => followUser(post.user._id)} className="px-5 py-2 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-colors text-sm">
               Follow
             </button>
           </div>

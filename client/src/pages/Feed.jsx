@@ -8,20 +8,40 @@ import { getPosts } from '../features/post/postSlice';
 import Loader from '../components/Loader';
 import { getProfile } from '../features/profile/profileSlice';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Feed = () => {
 
   const { posts, postLoading, postSucess, postError, postErrorMessage } = useSelector(state => state.post)
   const { user, isLoading, isError, isSuccess, message } = useSelector(state => state.auth)
-  const { profile } = useSelector(state => state.profile)
+  const { profile, profileLoading } = useSelector(state => state.profile)
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  // const myFeed = posts.map((post) => {})
+  let myFeed = null
 
-  // console.log(myFeed)
+  profile?.following.forEach((user) => {
+    myFeed = posts.filter((post) => {
+      if (post.user._id === user._id) {
+        return true
+      }
+    })
+  })
+
+  console.log(myFeed)
+
+
+
+
 
   useEffect(() => {
+
+    if (!user) {
+      navigate("/")
+    }
+
+
     // Fetch Posts
     dispatch(getPosts())
     // Fetch Profile
@@ -35,7 +55,7 @@ const Feed = () => {
   }, [postError, postErrorMessage, isError, message])
 
 
-  if (postLoading || isLoading) {
+  if (postLoading || isLoading || profileLoading || !myFeed) {
     return (
       <Loader />
     )
@@ -54,7 +74,7 @@ const Feed = () => {
       </div>
 
       <MasonryGrid>
-        {posts.map(post => (
+        {myFeed.map(post => (
           <PostCard key={post._id} post={post} />
         ))}
       </MasonryGrid>

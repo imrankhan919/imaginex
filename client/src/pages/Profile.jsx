@@ -17,6 +17,7 @@ const Profile = () => {
   const { profile, profileSuccess, profileLoading, profileError, profileErrorMessage } = useSelector(state => state.profile)
 
 
+
   const dispatch = useDispatch()
   const { username } = useParams();
 
@@ -83,7 +84,7 @@ const Profile = () => {
 
           <div className="flex gap-8 pt-4 border-t border-white/10">
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-white">{profile?.posts.length}</span>
+              <span className="text-xl font-bold text-white">{profile?.posts?.length}</span>
               <span className="text-sm font-medium text-gray-500 uppercase tracking-wider">Posts</span>
             </div>
             <div className="flex flex-col">
