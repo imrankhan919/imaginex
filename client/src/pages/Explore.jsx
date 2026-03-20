@@ -33,7 +33,7 @@ const Explore = () => {
       {posts.length > 0 ? (
         <MasonryGrid>
           {posts.map(post => (
-            <PostCard key={post.id} post={post} />
+            <PostCard key={post._id} post={post} />
           ))}
         </MasonryGrid>
       ) : (

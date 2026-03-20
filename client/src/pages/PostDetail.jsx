@@ -16,10 +16,10 @@ const PostDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch()
 
+  let alreadyFollowed = profile.following.some(follow => follow?._id === post?.user?._id)
 
-  let alreadyFollowed = profile
 
-  console.log(alreadyFollowed)
+
 
 
   const followUser = (id) => {
@@ -93,8 +93,8 @@ const PostDetail = () => {
                 <p className="text-xs text-gray-400">{post.user.followers.length} followers</p>
               </div>
             </Link>
-            <button onClick={() => followUser(post.user._id)} className="px-5 py-2 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-colors text-sm">
-              Follow
+            <button disabled={alreadyFollowed} onClick={() => followUser(post.user._id)} className="px-5 py-2 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-colors text-sm disabled:bg-green-900">
+              {alreadyFollowed ? "Followed" : "Follow"}
             </button>
           </div>
 

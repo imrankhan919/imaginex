@@ -19,17 +19,11 @@ const Feed = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  let myFeed = null
-
-  profile?.following.forEach((user) => {
-    myFeed = posts.filter((post) => {
-      if (post.user._id === user._id) {
-        return true
-      }
-    })
-  })
-
-  console.log(myFeed)
+  const filteredPosts = posts.filter(post =>
+    profile.following.some(follow =>
+      follow._id === post.user._id
+    )
+  );
 
 
 
@@ -47,6 +41,8 @@ const Feed = () => {
     // Fetch Profile
     dispatch(getProfile(user.name))
 
+
+
     if (postError && postErrorMessage || isError && message) {
       toast.error(postErrorMessage || message, { position: "top-center" })
     }
@@ -55,7 +51,7 @@ const Feed = () => {
   }, [postError, postErrorMessage, isError, message])
 
 
-  if (postLoading || isLoading || profileLoading || !myFeed) {
+  if (postLoading || isLoading || profileLoading) {
     return (
       <Loader />
     )
@@ -74,7 +70,7 @@ const Feed = () => {
       </div>
 
       <MasonryGrid>
-        {myFeed.map(post => (
+        {filteredPosts.map(post => (
           <PostCard key={post._id} post={post} />
         ))}
       </MasonryGrid>
