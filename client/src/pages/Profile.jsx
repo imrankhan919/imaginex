@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import CoverImage from "../assets/cover_image.jpg"
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CURRENT_USER, MOCK_POSTS } from '../mockData';
 import MasonryGrid from '../components/MasonryGrid';
 import PostCard from '../components/PostCard';
@@ -8,18 +8,37 @@ import UserAvatar from '../components/UserAvatar';
 import { Settings, Share2, MapPin, Calendar, CircleDollarSign } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
-import { getProfile } from '../features/profile/profileSlice';
+import { follow, getProfile, unfollow } from '../features/profile/profileSlice';
 import { toast } from 'react-toastify';
 
 const Profile = () => {
 
 
+
   const { profile, profileSuccess, profileLoading, profileError, profileErrorMessage } = useSelector(state => state.profile)
+  const { user } = useSelector(state => state.auth)
 
-
+  let alreadyFollowed = profile.followers.some(follow => follow?._id === user?.id)
 
   const dispatch = useDispatch()
   const { username } = useParams();
+
+
+  const handleFollowUnfollow = (id) => {
+
+    if (alreadyFollowed) {
+      // Unfolow
+      dispatch(unfollow(id))
+    } else {
+      // Follow
+      dispatch(follow(id))
+    }
+
+    // Reload The Page
+    window.location.href = "/profile/" + username
+  }
+
+
 
 
   useEffect(() => {
@@ -67,8 +86,8 @@ const Profile = () => {
             <button className="p-2 rounded-full glass-card hover:bg-white/10 transition-colors">
               <Share2 className="w-5 h-5 text-gray-300" />
             </button>
-            <button className="px-8 py-2 rounded-full bg-violet-600 hover:bg-violet-500 transition-colors font-medium shadow-lg shadow-violet-600/20">
-              Follow
+            <button onClick={() => handleFollowUnfollow(profile._id)} className={alreadyFollowed ? "px-5 py-2 rounded-full text-white font-medium hover:bg-white/20 transition-colors text-sm bg-red-500" : "px-5 py-2 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-colors text-sm"}>
+              {alreadyFollowed ? "Unfollow" : "Follow"}
             </button>
           </div>
         </div>

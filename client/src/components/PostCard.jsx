@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 import UserAvatar from './UserAvatar';
 import LikeButton from './LikeButton';
 
+
 const PostCard = ({ post }) => {
+
+
+
+
+
   return (
     <Link
       to={`/post/${post._id}`}
@@ -22,7 +28,7 @@ const PostCard = ({ post }) => {
 
         {/* Top bar */}
         <div className="flex justify-end translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-          <LikeButton initialLikes={post.likes.length} />
+          <LikeButton initialLikes={post?.likes?.length} post={post} />
         </div>
 
         {/* Bottom content */}

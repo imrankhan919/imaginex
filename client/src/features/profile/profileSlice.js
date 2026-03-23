@@ -52,6 +52,23 @@ const profileSlice = createSlice({
                 state.profileError = true
                 state.profileErrorMessage = action.payload
             })
+            .addCase(unfollow.pending, (state, action) => {
+                state.profileLoading = true
+                state.profileSuccess = false
+                state.profileError = false
+            })
+            .addCase(unfollow.fulfilled, (state, action) => {
+                state.profileLoading = false
+                state.profileSuccess = true
+                state.profile = { ...state.profile, following: state.profile.following.filter(follow => follow._id !== action.payload._id) }
+                state.profileError = false
+            })
+            .addCase(unfollow.rejected, (state, action) => {
+                state.profileLoading = false
+                state.profileSuccess = false
+                state.profileError = true
+                state.profileErrorMessage = action.payload
+            })
     }
 });
 
@@ -74,6 +91,18 @@ export const follow = createAsyncThunk("FOLLOW/PROFILE", async (uid, thunkAPI) =
 
     try {
         return await profileService.sendFollowRequest(uid, token)
+    } catch (error) {
+        let message = error.response.data.message
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const unfollow = createAsyncThunk("UNFOLLOW/PROFILE", async (uid, thunkAPI) => {
+
+    let token = thunkAPI.getState().auth.user.token
+
+    try {
+        return await profileService.sendUnFollowRequest(uid, token)
     } catch (error) {
         let message = error.response.data.message
         return thunkAPI.rejectWithValue(message)

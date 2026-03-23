@@ -68,6 +68,23 @@ const postSlice = createSlice({
                 state.postError = true
                 state.postErrorMessage = action.payload
             })
+            .addCase(likeUnlikePost.pending, (state, action) => {
+                state.postLoading = true
+                state.postSuccess = false
+                state.postError = false
+            })
+            .addCase(likeUnlikePost.fulfilled, (state, action) => {
+                state.postLoading = false
+                state.postSuccess = true
+                state.post = action.payload
+                state.postError = false
+            })
+            .addCase(likeUnlikePost.rejected, (state, action) => {
+                state.postLoading = false
+                state.postSuccess = false
+                state.postError = true
+                state.postErrorMessage = action.payload
+            })
     }
 });
 
@@ -114,4 +131,20 @@ export const getPost = createAsyncThunk("POST/GET", async (pid, thunkAPI) => {
         let message = error.response.data.message
         return thunkAPI.rejectWithValue(message)
     }
+})
+
+
+// Like Or Unlike Post
+export const likeUnlikePost = createAsyncThunk("POST/LIKEORUNLIKE", async (pid, thunkAPI) => {
+
+    let token = thunkAPI.getState().auth.user.token
+
+    try {
+        return await postService.updateLikeUnlike(pid, token)
+    } catch (error) {
+        let message = error.response.data.message
+        return thunkAPI.rejectWithValue(message)
+    }
+
+
 })

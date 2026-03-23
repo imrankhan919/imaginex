@@ -23,8 +23,23 @@ const sendFollowRequest = async (uid, token) => {
 
 }
 
+const sendUnFollowRequest = async (uid, token) => {
 
 
-const profileService = { fetchProfile, sendFollowRequest }
+    let options = {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    }
+
+    const response = await axios.put('/api/user/unfollow/' + uid, {}, options)
+    return response.data
+
+
+}
+
+
+
+const profileService = { fetchProfile, sendFollowRequest, sendUnFollowRequest }
 
 export default profileService

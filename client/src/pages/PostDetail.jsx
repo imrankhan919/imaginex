@@ -21,7 +21,6 @@ const PostDetail = () => {
 
 
 
-
   const followUser = (id) => {
     dispatch(follow(id))
   }
@@ -78,7 +77,7 @@ const PostDetail = () => {
               <button className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/5 transition-colors">
                 <MoreHorizontal className="w-5 h-5 text-gray-500" />
               </button>
-              <LikeButton initialLikes={post.likes.length} />
+              <LikeButton initialLikes={post.likes.length} post={post} />
             </div>
           </div>
 
