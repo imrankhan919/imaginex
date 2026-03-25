@@ -28,7 +28,7 @@ const PostCard = ({ post }) => {
 
         {/* Top bar */}
         <div className="flex justify-end translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-          <LikeButton initialLikes={post?.likes?.length} post={post} />
+          {/* <LikeButton initialLikes={post?.likes?.length} post={post} /> */}
         </div>
 
         {/* Bottom content */}

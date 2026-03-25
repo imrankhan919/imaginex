@@ -159,7 +159,7 @@ const likeAndUnlikePost = async (req, res) => {
     }
 
     // Populate after save using the Post model directly
-    await Post.populate(post, { path: 'likes' })
+    // await Post.populate(post, { path: 'likes' })
 
     res.status(200).json(post)
 

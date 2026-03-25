@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Heart } from 'lucide-react';
 import { likeUnlikePost } from '../features/post/postSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,9 +23,8 @@ const LikeButton = ({ initialLikes, post }) => {
 
     // Like Unlike Post
     dispatch(likeUnlikePost(post._id))
-
-    setLiked(!liked);
   };
+
 
 
 
