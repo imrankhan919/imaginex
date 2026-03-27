@@ -11,9 +11,9 @@ const Landing = () => {
 
 
   useEffect(() => {
-    if (user) {
-      navigate("/feed")
-    }
+    // if (user) {
+    //   navigate("/feed")
+    // }
   }, [user])
 
 

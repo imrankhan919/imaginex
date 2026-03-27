@@ -3,25 +3,29 @@ import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { Home, Compass, PlusSquare, User, Sparkles, Settings, LogOut } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../features/auth/authSlice';
+import { resetProfile } from '../features/profile/profileSlice';
 
 const Sidebar = () => {
 
-  const { user } = useSelector(state => state.auth)
+  const { user, isSuccess } = useSelector(state => state.auth)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const navItems = [
-    { icon: Home, label: 'Feed', path: '/feed' },
-    { icon: Compass, label: 'Explore', path: '/explore' },
-    { icon: PlusSquare, label: 'Generate', path: '/generate' },
-    { icon: User, label: 'Profile', path: `/profile/${user?.name}` },
+    { icon: Home, label: 'Feed', path: '/auth/feed' },
+    { icon: Compass, label: 'Explore', path: '/auth/explore' },
+    { icon: PlusSquare, label: 'Generate', path: '/auth/generate' },
+    { icon: User, label: 'Profile', path: `/auth/profile/${user?.name}` },
   ];
 
 
   const handleLogout = () => {
     dispatch(logoutUser())
-    navigate("/login")
+    if (isSuccess) {
+      dispatch(resetProfile())
+      navigate("/login")
+    }
   }
 
   return (
@@ -29,7 +33,7 @@ const Sidebar = () => {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex flex-col w-64 h-full border-r border-white/10 glass-card bg-[#0a0a0f]/95 shrink-0">
         <div className="p-6">
-          <Link to="/feed" className="flex items-center gap-2 group">
+          <Link to="/auth/feed" className="flex items-center gap-2 group">
             <Sparkles className="text-violet-500 w-8 h-8 group-hover:animate-pulse" />
             <h1 className="font-syne font-bold text-2xl bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent">
               Imaginex

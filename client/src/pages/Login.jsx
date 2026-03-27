@@ -41,8 +41,8 @@ const Login = () => {
 
 
   useEffect(() => {
-    if (user) {
-      navigate("/feed")
+    if (user && isSuccess) {
+      navigate("/auth/feed")
     }
 
     if (isError && message) {

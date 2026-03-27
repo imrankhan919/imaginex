@@ -48,7 +48,7 @@ const Register = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/")
+      navigate("/auth/feed")
     }
 
     if (isError && message) {
