@@ -13,7 +13,7 @@ const PostDetail = () => {
 
   const { profile, profileLoading, profileSuccess, profileError, profileErrorMessage } = useSelector(state => state.profile)
 
-  const { id } = useParams();
+  const { pid } = useParams();
   const dispatch = useDispatch()
 
   let alreadyFollowed = profile.following.some(follow => follow?._id === post?.user?._id)
@@ -30,9 +30,9 @@ const PostDetail = () => {
   useEffect(() => {
 
     // Fetch post details
-    dispatch(getPost(id))
+    dispatch(getPost(pid))
 
-  }, [id])
+  }, [pid])
 
 
   if (postLoading || !post) {
@@ -85,7 +85,7 @@ const PostDetail = () => {
 
           {/* User Info */}
           <div className="flex items-center justify-between">
-            <Link to={`/profile/${post.user.name}`} className="flex items-center gap-3 group">
+            <Link to={`/auth/profile/${post?.user?.name}`} className="flex items-center gap-3 group">
               <UserAvatar src={post.user.avatar} alt={post.user.name} />
               <div>
                 <p className="font-bold text-white group-hover:text-violet-400 transition-colors">{post.user.name}</p>

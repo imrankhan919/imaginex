@@ -15,8 +15,6 @@ import Sidebar from '../components/Sidebar';
 
 const Profile = () => {
 
-
-
   const { profile, profileSuccess, profileLoading, profileError, profileErrorMessage } = useSelector(state => state.profile)
   const { user } = useSelector(state => state.auth)
 
@@ -25,6 +23,7 @@ const Profile = () => {
   const dispatch = useDispatch()
   const { username } = useParams();
 
+  console.log(username)
 
   const handleFollowUnfollow = (id) => {
 

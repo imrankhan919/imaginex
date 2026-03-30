@@ -49,7 +49,7 @@ const updatePost = async (req, res) => {
 }
 
 const getReports = async (req, res) => {
-    const reports = await Report.find()
+    const reports = await Report.find().populate('user').populate('post')
 
     if (!reports) {
         res.status(404)

@@ -11,7 +11,7 @@ const useAdminStatus = () => {
 
     useEffect(() => {
 
-        user.isAdmin ? setIsAdmin(true) : setIsAdmin(false)
+        user?.isAdmin ? setIsAdmin(true) : setIsAdmin(false)
         setCheckingStatus(false)
 
     }, [user])

@@ -1,13 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image as ImageIcon } from 'lucide-react';
 import UserAvatar from '../../components/UserAvatar';
 import AdminSidebar from '../../components/admin/AdminSidebar';
+import Loader from '../../components/Loader';
+import { getAllPosts } from '../../features/admin/adminSlice';
+import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 
 const AdminPosts = () => {
-  const [posts, setPosts] = useState([]);
-  const [filter, setFilter] = useState('All');
 
-  const filterOptions = ['All', 'Published', 'Unpublished'];
+  const { posts, adminLoading, adminSuccess, adminError, adminErrorMessage } = useSelector(state => state.admin)
+
+  const dispatch = useDispatch()
+
+
+
+
+
+
+  useEffect(() => {
+
+    if (!adminError) {
+      // Fetch All Posts
+      dispatch(getAllPosts())
+    }
+
+    if (adminError && adminErrorMessage) {
+      toast.error(adminErrorMessage, { position: "top-center" })
+    }
+
+
+  }, [adminError, adminErrorMessage])
+
+  if (adminLoading) {
+    return (
+      <Loader />
+    )
+  }
+
+
 
   return (
 
@@ -26,7 +57,7 @@ const AdminPosts = () => {
             </div>
 
             {/* Filters */}
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               {filterOptions.map((opt) => (
                 <button
                   key={opt}
@@ -39,7 +70,7 @@ const AdminPosts = () => {
                   {opt}
                 </button>
               ))}
-            </div>
+            </div> */}
 
             {/* Table */}
             <div className="glass-card overflow-hidden">

@@ -12,7 +12,7 @@ const PostCard = ({ post }) => {
 
   return (
     <Link
-      to={`/post/${post._id}`}
+      to={`/auth/post/${post._id}`}
       className="group block relative rounded-2xl overflow-hidden mb-4 break-inside-avoid shadow-lg shadow-violet-900/5 hover:-translate-y-1 hover:shadow-violet-900/20 transition-all duration-500 cursor-zoom-in bg-white/5"
     >
       {/* Image */}
