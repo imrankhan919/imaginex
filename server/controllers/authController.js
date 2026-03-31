@@ -64,6 +64,13 @@ const loginUser = async (req, res) => {
     // Check if user  exists 
     let user = await User.findOne({ email: email })
 
+    // Check if users is not banned
+    if (!user.isActive) {
+        res.status(401)
+        throw new Error("You Are Banned! Contact Admin!")
+    }
+
+
     if (user && await bcrypt.compare(password, user.password)) {
         res.status(200).json({
             id: user._id,

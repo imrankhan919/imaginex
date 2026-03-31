@@ -13,9 +13,6 @@ const AdminReports = () => {
 
 
 
-
-
-
   useEffect(() => {
 
     if (!adminError) {

@@ -38,7 +38,7 @@ const updatePost = async (req, res) => {
         throw new Error('Post Not Found!')
     }
 
-    let updatedPost = await Post.findByIdAndUpdate(postId, req.body, { new: true })
+    let updatedPost = await Post.findByIdAndUpdate(postId, { isPublished: post.isPublished ? false : true }, { new: true })
 
     if (!updatedPost) {
         res.status(409)

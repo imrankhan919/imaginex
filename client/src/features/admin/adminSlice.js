@@ -68,6 +68,40 @@ const adminSlice = createSlice({
                 state.adminError = true
                 state.adminErrorMessage = action.payload
             })
+            .addCase(banUnBanUser.pending, (state, action) => {
+                state.adminLoading = true
+                state.adminSuccess = false
+                state.adminError = false
+            })
+            .addCase(banUnBanUser.fulfilled, (state, action) => {
+                state.adminLoading = false
+                state.adminSuccess = true
+                state.users = state.users.map(user => user._id === action.payload._id ? action.payload : user)
+                state.adminError = false
+            })
+            .addCase(banUnBanUser.rejected, (state, action) => {
+                state.adminLoading = false
+                state.adminSuccess = false
+                state.adminError = true
+                state.adminErrorMessage = action.payload
+            })
+            .addCase(publishUnPublishPost.pending, (state, action) => {
+                state.adminLoading = true
+                state.adminSuccess = false
+                state.adminError = false
+            })
+            .addCase(publishUnPublishPost.fulfilled, (state, action) => {
+                state.adminLoading = false
+                state.adminSuccess = true
+                state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
+                state.adminError = false
+            })
+            .addCase(publishUnPublishPost.rejected, (state, action) => {
+                state.adminLoading = false
+                state.adminSuccess = false
+                state.adminError = true
+                state.adminErrorMessage = action.payload
+            })
     }
 });
 
@@ -117,4 +151,28 @@ export const getAllReports = createAsyncThunk("FETCH/ADMIN/REPORTS", async (_, t
         return thunkAPI.rejectWithValue(message)
     }
 
+})
+
+
+// Ban/Unban User
+export const banUnBanUser = createAsyncThunk("ADMIN/UPDATE/USER", async (uid, thunkAPI) => {
+    let token = thunkAPI.getState().auth.user.token
+    try {
+        return await adminService.updateUser(uid, token)
+    } catch (error) {
+        let message = error.response.data.message
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+
+// Publish/UnPublish Post
+export const publishUnPublishPost = createAsyncThunk("ADMIN/UPDATE/POST", async (pid, thunkAPI) => {
+    let token = thunkAPI.getState().auth.user.token
+    try {
+        return await adminService.updatePost(pid, token)
+    } catch (error) {
+        let message = error.response.data.message
+        return thunkAPI.rejectWithValue(message)
+    }
 })

@@ -25,7 +25,7 @@ const Feed = () => {
     profile?.following?.some(follow =>
       follow._id === post.user._id
     )
-  );
+  ).filter(post => post.isPublished)
 
 
 

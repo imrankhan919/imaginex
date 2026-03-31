@@ -5,7 +5,7 @@ import AdminSidebar from '../../components/admin/AdminSidebar';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/Loader';
 import { toast } from 'react-toastify';
-import { getAllUsers } from '../../features/admin/adminSlice';
+import { banUnBanUser, getAllUsers } from '../../features/admin/adminSlice';
 
 const AdminUsers = () => {
 
@@ -13,7 +13,9 @@ const AdminUsers = () => {
 
   const dispatch = useDispatch()
 
-
+  const handleBanUnbanUser = (uid) => {
+    dispatch(banUnBanUser(uid))
+  }
 
 
 
@@ -113,11 +115,11 @@ const AdminUsers = () => {
                           </td>
                           <td className="py-4 px-4 text-right">
                             {u.isActive ? (
-                              <button className="border border-rose-500/50 text-rose-400 hover:bg-rose-500/10 px-3 py-1 rounded-full text-xs font-medium transition-colors">
+                              <button onClick={() => handleBanUnbanUser(u._id)} className="border border-rose-500/50 text-rose-400 hover:bg-rose-500/10 px-3 py-1 rounded-full text-xs font-medium transition-colors">
                                 Ban
                               </button>
                             ) : (
-                              <button className="border border-green-500/50 text-green-400 hover:bg-green-500/10 px-3 py-1 rounded-full text-xs font-medium transition-colors">
+                              <button onClick={() => handleBanUnbanUser(u._id)} className="border border-green-500/50 text-green-400 hover:bg-green-500/10 px-3 py-1 rounded-full text-xs font-medium transition-colors">
                                 Unban
                               </button>
                             )}

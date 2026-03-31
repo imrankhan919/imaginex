@@ -41,8 +41,32 @@ const fetchAllReports = async (token) => {
 }
 
 
+const updateUser = async (uid, token) => {
+    let options = {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    }
 
-const adminService = { fetchAllUsers, fetchAllPosts, fetchAllReports }
+    const response = await axios.put(`${API_URL}/user/${uid}`, {}, options)
+    return response.data
+}
+
+const updatePost = async (pid, token) => {
+    let options = {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    }
+
+    const response = await axios.put(`${API_URL}/post/${pid}`, {}, options)
+    return response.data
+}
+
+
+
+
+const adminService = { fetchAllUsers, fetchAllPosts, fetchAllReports, updateUser, updatePost }
 
 
 export default adminService

@@ -9,7 +9,14 @@ const forUser = async (req, res, next) => {
             let decoded = jwt.verify(token, process.env.JWT_SECRET)
             let user = await User.findById(decoded.id).select("-password")
             req.user = user
-            next()
+
+            if (user.isActive) {
+                next()
+            } else {
+                res.status(401)
+                throw new Error('You are banned! Contact Admin')
+            }
+
         } else {
             res.status(401)
             throw new Error('No Token Found!')
