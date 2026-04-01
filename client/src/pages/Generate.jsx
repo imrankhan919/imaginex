@@ -45,7 +45,7 @@ const Generate = () => {
   useEffect(() => {
 
     if (postSuccess && post) {
-      navigate("/feed")
+      navigate("/auth/feed")
     }
 
 
