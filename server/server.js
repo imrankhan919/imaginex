@@ -1,5 +1,7 @@
 import express from "express"
 import dotenv from "dotenv"
+import path from 'node:path';
+import { fileURLToPath } from 'url'
 import colors from "colors"
 import connectDB from "./config/dbConfig.js"
 
@@ -14,6 +16,12 @@ import savedPostsRoutes from "./routes/savedPostRoutes.js"
 
 dotenv.config()
 
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+
+
 const PORT = process.env.PORT || 5000
 const app = express()
 
@@ -24,14 +32,6 @@ connectDB()
 // Body Parser
 app.use(express.json())
 app.use(express.urlencoded())
-
-
-// Default Route
-app.get("/", (req, res) => {
-    res.json({
-        message: "WELCOME TO IMAGINEX API..."
-    })
-})
 
 
 // Auth Routes
@@ -51,6 +51,29 @@ app.use("/api/posts", postRoutes)
 
 // Saved Posts
 app.use("/api/saved-posts", savedPostsRoutes)
+
+
+const buildPath = path.resolve(__dirname, '../client/dist');
+
+// 5. Static File Serving & SPA Routing
+if (process.env.NODE_ENV === "production") {
+    // Serve static files from the build directory
+    app.use(express.static(buildPath));
+
+    // Express v5 requires a named parameter for wildcards (/*splat)
+    app.get('/*splat', (req, res) => {
+        res.sendFile(path.join(buildPath, 'index.html'), (err) => {
+            if (err) {
+                // If index.html is missing, this provides a clearer error
+                res.status(500).send("Build file index.html not found. Ensure you ran 'npm run build' in the client folder.");
+            }
+        });
+    });
+} else {
+    app.get("/", (req, res) => {
+        res.send("API is running... (Development Mode)");
+    });
+}
 
 
 
